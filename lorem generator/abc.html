@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorem ipsum generator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 80%;
+            margin-bottom: 20px;
+        }
+
+        .paragraph,
+        .word {
+            display: flex;
+            align-items: center;
+        }
+
+        .paragraph label,
+        .word label {
+            margin-right: 10px;
+        }
+
+        .output {
+            width: 80%;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        #copyButton {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        Lorem ipsum generator
+    </header>
+
+    <section>
+        <div class="option">
+            <div class="paragraph">
+                <label for="paragraph">Paragraph:</label>
+                <input type="range" min="1" id="paragraph" max="50" value="1">
+                <span id="paragraphsValue">1</span>
+            </div>
+            <div class="word">
+                <label for="word">Words:</label>
+                <input type="range" id="word" min="1" max="15" value="10">
+                <span id="wordsValue">10</span>
+            </div>
+            <button id="generate">
+                Generate
+            </button>
+        </div>
+        <div class="output">
+
+        </div>
+        <button id="copyButton">
+            Copy to Clipboard
+        </button>
+    </section>
+
+    <script>
+        const outputBox = document.querySelector(".output");
+        const wordSlider = document.getElementById("word");
+        const paraSlider = document.getElementById("paragraph");
+        const copyButton = document.getElementById("copyButton");
+
+        const paragraphsValue =
+            document.getElementById(
+                "paragraphsValue"
+            );
+        const wordsValue =
+            document.getElementById(
+                "wordsValue"
+            );
+
+
+        function createOutput() {
+            paraSlider.addEventListener("input",
+                updateParagraph
+            );
+
+            wordSlider.addEventListener("input",
+                updateWord
+            );
+
+            const generateButton =
+                document.getElementById(
+                    "generate"
+                );
+
+            generateButton.addEventListener("click",
+                generateLoremIpsum
+            );
+
+            copyButton.addEventListener("click", function() {
+    copyButton.innerHTML = "Copied !";
+    copyToClipboard();
+});
+
+        }
+
+        function copyToClipboard() {
+            const textToCopy = outputBox.textContent;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    console.log("Text copied to clipboard!");
+                })
+                .catch((error) => {
+                    console.error("Error copying text: ", error);
+                });
+        }
+
+        
+
+
+        function updateParagraph() {
+            paragraphsValue.textContent = parseInt(paraSlider.value);
+        }
+
+        function updateWord() {
+            wordsValue.textContent = parseInt(wordSlider.value);
+        }
+
+        function displayLoremIpsum(text) {
+            outputBox.innerHTML = text;
+        }
+
+        function generateLoremIpsum() {
+            const paragraphs = parseInt(paraSlider.value);
+            const wordsPerParagraph = parseInt(wordSlider.value);
+
+            const loremIpsumText = generateText(
+                paragraphs,
+                wordsPerParagraph
+            );
+            displayLoremIpsum(loremIpsumText);
+        }
+
+        function generateText(paragraphs, wordsPerParagraph) {
+            let loremArray = [];
+
+            for (let i = 0; i < paragraphs; i++) {
+                const words = generateWord(wordsPerParagraph);
+                loremArray.push(words);
+            }
+
+            return loremArray.join("\n");
+        }
+
+        function generateWord(numWords) {
+            const text = `Lorem ipsum dolor sit amet, consectetur 
+		adipiscing elit, sed do eiusmod tempor 
+		incididunt ut labore et dolore magna 
+		aliqua. Diam in arcu cursus euismod 
+		quis viverra nibh. Nunc aliquet bibendum 
+		enim facilisis gravida neque convallis 
+		a cras. Sagittis purus sit amet volutpat 
+		Consequat mauris. Duis ultricies lacus 
+		sed turpis tincidunt id. Consequat interdum 
+		varius sit amet mattis vulputate. Enim sed 
+		faucibus turpis in eu. Ridiculus mus mauris 
+		vitae ultricies leo integer malesuada nunc vel. 
+		Nulla pharetra diam sit amet nisl suscipit. 
+		Lobortis elementum nibh tellus molestie nunc 
+		non blandit massa enim. Dis parturient montes 
+		nascetur ridiculus mus. Justo nec ultrices dui 
+		sapien eget. Enim tortor at auctor urna nunc. 
+		Dictumst quisque sagittis purus sit amet volutpat 
+		consequat mauris nunc.`;
+
+            const words = text.split(" ");
+
+            if (numWords <= words.length) {
+                return words
+                    .slice(0, numWords)
+                    .join(" ");
+            } else {
+                return words.join(" ");
+            }
+        }
+
+        createOutput();
+    </script>
+</body>
+
+</html>
